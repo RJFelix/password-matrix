@@ -1,0 +1,9 @@
+@media print {
+  .settings-form {
+    display: none;
+  }
+}
+
+form {
+  margin-top: 20px;
+}
