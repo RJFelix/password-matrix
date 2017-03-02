@@ -11,7 +11,7 @@ const TYPES = {
 };
 
 //non-const because we may need to add an [TYPES.any] property later
-let LETTERS = {
+let letters = {
   [TYPES.ucLetter]: ["A", "B", "C", "D", "E", "F",
                      "G", "H", "I", "J", "K", "L",
                      "M", "N", "O", "P", "Q", "R",
@@ -23,7 +23,8 @@ let LETTERS = {
                      "s", "t", "u", "v", "w", "x",
                      "y", "z"],
   [TYPES.number]: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-  [TYPES.special]: ["!", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", "+", "{", "}", ";", ":", "<", ">", "/", "?", "~"]
+  [TYPES.special]: ["!", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", 
+                    "=", "+", "{", "}", ";", ":", "<", ">", "/", "?", "~"]
 }
 
 export default function Cell(props) {
@@ -39,16 +40,16 @@ export default function Cell(props) {
   } else if(wordLength < 2) {
     wordLength = 2; 
   }
-  // set up an array to hold our random positive ints
-  // +1 int for ordering
+
+  // +1 random int to use for ordering
   let randoms = new Uint8Array(wordLength + 1);
   window.crypto.getRandomValues(randoms);
 
   // create an array of all valid values, if it will be needed
   if(wordLength > (2 + (props.useNumbers && 1) + (props.useSpecials && 1))) {
-    LETTERS[TYPES.any] = LETTERS[TYPES.ucLetter].concat(LETTERS[TYPES.lcLetter], 
-                                                        props.useNumbers ? LETTERS[TYPES.number] : [], 
-                                                        props.useSpecials ? LETTERS[TYPES.special] : []);
+    letters[TYPES.any] = letters[TYPES.ucLetter].concat(letters[TYPES.lcLetter], 
+                                                        props.useNumbers ? letters[TYPES.number] : [], 
+                                                        props.useSpecials ? letters[TYPES.special] : []);
   }
   
   // populate an array with the types we need to use
@@ -64,15 +65,15 @@ export default function Cell(props) {
   while(wordLength > typesToUse.length) {
     typesToUse.push(TYPES.any);
   }
-  // very far from the neatest implementation but it works!
+  // generate the cell's word
   let cellWord = [];
   for(let i = 0; i < wordLength; i++) {
     // get the type we're using for this char, and remove it from the typesToUse array
     const type = typesToUse.splice(randoms[0] % typesToUse.length, 1)[0];
     // got rid of the switch! :D
-    cellWord[i] = LETTERS[type][randoms[i + 1] % LETTERS[type].length];
+    // it does exactly the same thing as the commented out switch below, just in an ES6-y way
+    cellWord[i] = letters[type][randoms[i + 1] % letters[type].length];
 
-    // ideally get rid of this switch
     // switch (type) {
     //   case TYPES.ucLetter:
     //     cellWord[i] = UCLETTERS[randoms[i + 1] % UCLETTERS.length];
