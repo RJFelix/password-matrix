@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Grid from "./components/Grid";
 import Settings from "./components/Settings";
